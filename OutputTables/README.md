@@ -1,32 +1,47 @@
-# Microexon Code paper
-
-
-This repository contains the scripts and model predictions used in the analysis of autism-associated genetic variation and its impact on brain microexons, as detailed in our paper "An expanded repertoire of brain microexons is directly impacted by autism-associated genetic variation"
+# Microexon Code Outputs
 
 ## Description
 
-Our study presents an integrative analysis of an expanded repertoire of neuronal differential microexons and the development of a machine learning model that delineates sequence elements critical for regulating microexon splicing. We reveal a landscape of predominantly rare human genetic variation that convergently impacts a subset of microexons in genes with known and unknown links to nervous system biology and neurodevelopmental disorders.
+This repository provides data compiling code predictions for all Single Nucleotide Variants (SNVs) and insertions/deletions (indels) evaluated in our work, facilitating further exploration of regulatory mechanisms and genotype-phenotype relationships involving microexons.
 
-## Contents
+## Data Files
 
-- `Training/`: This directory contains part of the scripts used for training the Microexon Code model developed to predict neuronally-spliced microexons from genome sequence data.
-- `DataAnalysis/`: This directory contains all the scripts used for data analysis.
-- `OutputTables/`: This directory contains the model predictions for all single nucleotide variants (SNVs) and autism spectrum disorder (ASD) indels identified in our study.
+### known_and_novel_microexons.known_microexon_model.hg38.csv
 
-## Output Variant predictions
+This file contains all the metadata for the known and new human neuronal microexons analyzed.
 
-The predictions for all variants evaluated by our model as part of the analysis carried out in the paper are can be found at `OutputTables/ASD_indels_and_ISM_SNVs.deta_code_preditions.tsv`. Detail descriptions for this table and other complementary tables are found at `OutputTables/README.md`.
+#### Column Description
 
+- `event`: Microexon ID. Known microexons IDs were taken from VastDB.
+- `chrom`: Chromosome.
+- `strand`: Strand (+/-).
+- `upIntStart`: Upstream intron start.
+- `upIntEnd`: Upstream intron end.
+- `dnIntStart`: Downstream intron start.
+- `dnIntEnd`: Downstream intron end.
+- `geneName`: Gene name.
+- `lengthDiff`: Microexon length.
+- `label`: Microexon label; with `hi` indicating known neuronal microexons and `novel` indicating new ones.
+- `group`: Group of microexons (known/novel).
+- `wt_neural_high_pred`: Wild-type prediction scores.
+- `ME`: MicroExonator ID provided for novel microexons.
+- `geneID`: ENSEMBL gene ID.
+- `mes3`: MaxEntScan 3' splice site score.
+- `mes5`: MaxEntScan 5' splice site score.
+- `conservation`: phastCons conservation score.
+- `neural_high_pred`: Wild-type prediction scores.
 
-## License
+### ASD_indels_and_ISM_SNVs.deta_code_preditions.tsv
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This file contains our model predictions for all possible SNVs across microexons and indels associated with Autism Spectrum Disorder (ASD) families analyzed in our study.
 
-## Citation
+#### Column Description
 
-If you use the scripts or data provided in this repository, please cite our paper:
-Parada, G.E., Bretschneider, H., et al. (2024). An expanded repertoire of brain microexons is directly impacted by autism-associated genetic variation. *Journal Name*, *Volume*(Issue), pages.
-
-## Contact
-
-For any questions or support, please open an issue in the repository or contact the corresponding authors at their email addresses provided in the paper.
+- `variant`: Variant ID.
+- `event`: Microexon ID.
+- `region`: Microexon region impacted by the variant, with up/dn corresponding to upstream and downstream intronic regions respectively; ex microexon region; c1/c2 flanking exon regions.
+- `rel_pos`: Distance from splice site microexon splice site. If region=c1/c2, then this corresponds to the distance to flanking exon splice sites.
+- `var_type`: Variant type; indel or single nucleotide variant (SNV).
+- `raw_delta`: Direct difference between wild-type and mutant prediction scores.
+- `delta_logit_score`: Difference between wild-type and mutant logit prediction scores.
+- `transformed_score`: Scaled delta logit scores used for all the analyses of our paper.
