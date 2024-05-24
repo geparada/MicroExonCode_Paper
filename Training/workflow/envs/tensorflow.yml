@@ -1,0 +1,12 @@
+name: tensorflow
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - numpy
+  - twobitreader
+  - pandas
+  - tqdm
+  - tensorflow=2.2

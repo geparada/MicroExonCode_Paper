@@ -1,0 +1,16 @@
+configfile: "config/config.yaml"
+config["input_file_schema"] = "resources/inputs/{task}/{prefix}.{species}.tab.gz"
+
+wildcard_constraints:
+  prefix="[\w_]+"
+
+include: "rules/download_data.smk"
+include: "rules/compute_features.smk"
+include: "rules/make_predictions.smk"
+# include: "rules/tcag.smk"
+include: "rules/double_motif_ism.smk"
+include: "rules/qki_variants.smk"
+include: "rules/putative_microexons.smk"
+include: "rules/train_model.smk"
+include: "rules/saturation_ism.smk"
+include: "rules/personal_genome_tcag_predictions.smk"

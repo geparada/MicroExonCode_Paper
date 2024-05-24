@@ -1,0 +1,36 @@
+tcag_input_path: /scratch/hdd001/home/hannes/tcag
+
+# List all event input files here
+samples:
+  # The file format must conform to {prefix}.{species}.tab.gz
+  - resources/inputs/mic_events.hg38.tab.gz
+  - resources/inputs/mic_events.mm10.tab.gz
+
+# Whether to use CUDA for GPU acceleration of Seqweaver features
+cuda: True
+
+# Path to the trained xgboost model
+model_path: "resources/trained_models/multispecies_no_length/model_multispecies.hi_vs_crypt"
+
+# Path to the SVM light executable
+svm_light_path: "svm-bpfinder/svm_light_linux/svm_classify"
+
+species:
+  - hg38
+  - mm10
+  - bosTau6
+  - monDom5
+  - rheMac2
+  - panTro4
+  - rn6
+
+model_features:
+  - ss_strength
+  - gc_content
+  - svm_bp_scores
+  - manual_rbp_binding
+  - CisBP
+  - cossmo
+  - seqweaver
+  - nsr100
+  - kmers
