@@ -1,9 +1,6 @@
 name: xgboost
 channels:
-  - bioconda
   - conda
-  - defaults
-  - conda-forge
 dependencies:
   - python
   - numpy

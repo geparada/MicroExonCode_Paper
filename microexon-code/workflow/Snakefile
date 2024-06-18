@@ -3,7 +3,7 @@ import pandas as pd
 configfile: "config/config.yaml"
 
 wildcard_constraints:
-  prefix="[\w_]+"
+  prefix=r"[\w_]+"
 
 include: "rules/download_data.smk"
 include: "rules/compute_features.smk"

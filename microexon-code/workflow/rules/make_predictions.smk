@@ -36,7 +36,7 @@ rule predictions_for_model:
     "../envs/predictions.yml"
   wildcard_constraints:
     model="known_microexons|novel_microexons|original_model|known_microexons_hg38",
-    species="\w{2,6}\d{1,2}"
+    species=r"\w{2,6}\d{1,2}"
   script:
     "../scripts/predict_microexons.py"
 

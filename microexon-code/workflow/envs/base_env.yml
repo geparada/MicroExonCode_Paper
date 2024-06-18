@@ -1,9 +1,9 @@
 name: microexon-code-base-env
 channels:
+  - conda-forge
   - bioconda
   - conda
   - defaults
-  - conda-forge
 dependencies:
   - python
   - pandas

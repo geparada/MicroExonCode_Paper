@@ -9,6 +9,6 @@ rule download_genome_2bit:
   output:
     "resources/genomes/{species}.2bit"
   wildcard_constraints:
-    species="\w{2,6}\d{1,2}"
+    species=r"\w{2,6}\d{1,2}"
   shell:
     "mv {input} {output}"

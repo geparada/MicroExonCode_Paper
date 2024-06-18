@@ -1,6 +1,6 @@
 import pathlib
 
-species_constraint = "\w{2,6}\d{1,2}"
+species_constraint = r"\w{2,6}\d{1,2}"
 
 rule features_seqweaver:
   """Run Seqweaver"""
