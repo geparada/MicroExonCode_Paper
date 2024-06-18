@@ -9,7 +9,7 @@ Our study presents an integrative analysis of an expanded repertoire of neuronal
 
 ## Contents
 
-- `Training/`: This directory contains part of the scripts used for training the Microexon Code model developed to predict neuronally-spliced microexons from genome sequence data.
+- `microexon-code`: This directory contains the computational workflow to perform predictions.
 - `DataAnalysis/`: This directory contains all the scripts used for data analysis.
 - `OutputTables/`: This directory contains the model predictions for all single nucleotide variants (SNVs) and autism spectrum disorder (ASD) indels identified in our study.
 
