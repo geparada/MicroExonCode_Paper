@@ -1,14 +1,11 @@
-from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
-from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
-
-HTTP = HTTPRemoteProvider()
-FTP = FTPRemoteProvider()
+storage:
+    provider="http",
 
 rule download_genome_2bit:
   """Download the genomes"""
   input:
-    lambda wildcards: HTTP.remote(
-      f"hgdownload.soe.ucsc.edu/goldenPath/{wildcards.species}/bigZips/{wildcards.species}.2bit", insecure=True)
+    lambda wildcards: storage.http(
+      f"http://hgdownload.soe.ucsc.edu/goldenPath/{wildcards.species}/bigZips/{wildcards.species}.2bit")
   output:
     "resources/genomes/{species}.2bit"
   wildcard_constraints:

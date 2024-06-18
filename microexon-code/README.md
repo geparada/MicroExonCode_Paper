@@ -24,7 +24,7 @@ Microexon Code is run by executing Snakemake commands. Snakemake will then build
 ### Inference
 To run inference on your own inputs you need to follow these steps exactly. The data format as well as the file names and paths must be exactly as specified as otherwise, Snakemake cannot deduce the correct workflow. For examples of correct inputs, see `resources/inputs/`
 
-- Create an input file in gzipped tab format with the following columns:
+Create an input file in gzipped tab format with the following columns:
   - `event`: An event ID you can choose
   - `chrom`: Chromosome in UCSC format (e.g. "chr5", "chrX")
   - `strand`: `+` or `-`
@@ -33,13 +33,20 @@ To run inference on your own inputs you need to follow these steps exactly. The 
   - `lengthDiff`: The length of the microexon
   - `label`: Not used for inference, can be set to any value
   - `variant` (optional column): Comma-delimited list of variants (e.g. `chr10:26770836:T:A`) to apply to the sequence. Variants must be non-overlapping. 
-- Store the input file under `resources/inputs/{task}/{prefix}.{species}.tab.gz`, where you can choose your own values for `{task}` and `{prefix}` and specify the desired genome build for `{species}`. Do not use any dots (`.`) in the prefix. An example of a valid path is `resources/inputs/wt/MicEvents.hg38.tab.gz`.
-- Run inference with the following command:
+
+Store the input file under `resources/inputs/{task}/{prefix}.{species}.tab.gz`, where you can choose your own values for `{task}` and `{prefix}` and specify the desired genome build for `{species}`. Do not use any dots (`.`) in the prefix. An example of a valid path is `resources/inputs/wt/MicEvents.hg38.tab.gz`.
+ 
+Run inference with the following command:
   ```shell
   $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars results/predictions/{model_name}/{task}/predictions.{prefix}.{species}.csv.gz
   ``` 
 
-  Substitute the values for `{task}`, `{prefix}` and `{species}` from your input file. For `{model_name}`, choose which model you want to use for the predictions:
+Substitute the values for `{task}`, `{prefix}` and `{species}` from your input file. For `{model_name}`, choose which model you want to use for the predictions:
   - `known_microexons`: This model was trained on known microexons from seven mammalian species
   - `known_microexons_hg38`: This model was only trained on human known microexons
   - `novel_microexons`: This model was trained known microexons from seven mammalian species and the human novel microexons we detected in our study
+
+As an example, you can run predictions for the known human wild-type microexons with the command
+```shell
+snakemake --use-conda --conda-not-block-search-path-envvars results/predictions/known_microexons/wt/predictions.MicEvents.hg38.csv.gz
+```
