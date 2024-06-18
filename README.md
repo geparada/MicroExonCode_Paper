@@ -9,7 +9,7 @@ Our study presents an integrative analysis of an expanded repertoire of neuronal
 
 ## Contents
 
-- `microexon-code`: This directory contains the computational workflow to perform predictions.
+- `microexon-code`: This directory contains the computational workflow to perform predictions. Please see the [README](microexon-code/README.md) for instructions of this tool.
 - `DataAnalysis/`: This directory contains all the scripts used for data analysis.
 - `OutputTables/`: This directory contains the model predictions for all single nucleotide variants (SNVs) and autism spectrum disorder (ASD) indels identified in our study.
 
