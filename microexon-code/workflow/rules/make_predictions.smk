@@ -36,16 +36,6 @@ rule predictions_for_model:
     "../envs/predictions.yml"
   wildcard_constraints:
     model="known_microexons|novel_microexons|original_model|known_microexons_hg38",
-    species=r"\w{2,6}\d{1,2}"
+    species=r"(\w{2,6}\d{1,2})|(\[.+\])"
   script:
     "../scripts/predict_microexons.py"
-
-TCAG_INDEL_INPUTS, = glob_wildcards("resources/inputs/tcag_indels/{task}.hg38.tab.gz")
-rule tcag_indels:
-  input:
-    expand("results/predictions/known_microexons/tcag_indels/predictions.{task}.hg38.csv.gz", task=TCAG_INDEL_INPUTS)
-
-BRAINNET_INDEL_INPUTS, = glob_wildcards("resources/inputs/BrainNet_Indels/{task}.hg38.tab.gz")
-rule brainnet_indels:
-  input:
-    expand("results/predictions/known_microexons/BrainNet_Indels/predictions.{task}.hg38.csv.gz", task=BRAINNET_INDEL_INPUTS)
