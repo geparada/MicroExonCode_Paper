@@ -22,7 +22,7 @@ Then activate environment
 conda activate DataAnalysis
 ```
 
-To open and run these notebook files, you can use [JupyterLab](https://jupyter.org/) or [Jupyter Notebook](https://jupyter.org/). These tools provide an interactive environment for running and editing Jupyter notebooks.
+To open and run these notebook files, you can use [JupyterLab](https://jupyter.org/), which provides an interactive environment for running and editing Jupyter notebooks.
 
 An exhaustive list of all the libraries included in the virtual environment we used to carry out these analyses and their corresponding versions is found in the `env/environment_clone.yml` file.
 
