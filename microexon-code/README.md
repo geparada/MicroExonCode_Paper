@@ -45,29 +45,76 @@ In this mode, you may score sequences from a reference genome and optionally app
 To run inference on your own inputs you need to follow these steps exactly. The data format as well as the file names and paths must be exactly as specified as otherwise, Snakemake cannot deduce the correct workflow. For examples of correct inputs, see `resources/inputs/`
 
 Create an input file in gzipped tab format with the following columns:
-  - `event`: An event ID you can choose
-  - `chrom`: Chromosome in UCSC format (e.g. "chr5", "chrX")
+  - `event`: An event ID you can choose, e.g. `HsaEX6035820`
+  - `chrom`: Chromosome in UCSC format (e.g. `chr5`, `chrX`)
   - `strand`: `+` or `-`
-  - `upIntStart`, `upIntEnd`, `dnIntStart`, `dnIntEnd`: Genomic coordinates of the upstream and downstream introns of the microexon, 1-based indexing
-  - `geneName`: Gene name
-  - `lengthDiff`: The length of the microexon
-  - `label`: Not used for inference, can be set to any value
+  - `upIntStart`, `upIntEnd`, `dnIntStart`, `dnIntEnd`: Genomic coordinates of the upstream and downstream introns of the microexon, 1-based indexing, e.g. `198639342       198692346       198692374       198696711`
+  - `geneName`: Gene name, e.g. `PTPRC`
+  - `lengthDiff`: The length of the microexon, e.g. `27`
+  - `label`: Not used for inference, can be set to any value, e.g. `hi`
   - `variant` (optional column): Comma-delimited list of variants (e.g. `chr10:26770836:T:A`) to apply to the sequence. Variants must be non-overlapping. 
 
-Store the input file under `resources/inputs/{task}/{prefix}.{species}.tab.gz`, where you can choose your own values for `{task}` and `{prefix}` and specify the desired genome build for `{species}`. Do not use any dots (`.`) in the prefix. An example of a valid path is `resources/inputs/wt/MicEvents.hg38.tab.gz`.
- 
-Run inference with the following command:
-```shell
-  $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars results/predictions/{model_name}/{task}/predictions.{prefix}.{species}.csv.gz
-``` 
-Substitute `{N}` for the number of cores on your machine or the number of parallel jobs you'd like to run
+You can find several examples of valid input files under [`resources/inputs/wt`](resources/inputs/wt) (for wild-type sequences) and [`resources/inputs/variants`](resources/inputs/variants) (with variants). 
 
-Substitute the values for `{task}`, `{prefix}` and `{species}` from your input file. For `{model_name}`, choose which model you want to use for the predictions:
+Store your own input file under `resources/inputs/{task}/{prefix}.{species}.tab.gz`, where you can choose your own values for `{task}` and `{prefix}` and specify the desired genome build for `{species}`. Do not use any dots (`.`) in the prefix. An example of a valid path is `resources/inputs/wt/MicEvents.hg38.tab.gz`.
+ 
+You can run inference on all input file, including the supplied examples, in `resources/inputs` via the command
+```shell
+  $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars predictions
+``` 
+Substitute `{N}` for the number of cores on your machine or the number of parallel jobs you'd like to run.
+
+Your predictions will be output in `results/predictions/{model_name}/{task}/predictions.{prefix}.{species}.csv.gz`
+
+We will automatically output predictions for three different models which you can find under `{model_name}`
+
+These are:
   - `known_microexons`: This model was trained on known microexons from seven mammalian species
   - `known_microexons_hg38`: This model was only trained on human known microexons
   - `novel_microexons`: This model was trained known microexons from seven mammalian species and the human novel microexons we detected in our study
 
-As an example, you can run predictions for the known human wild-type microexons with the command
+### Saturation _in silico_ mutagenesis
+You can run our saturation _in silico_ mutagenesis experiment with the command
 ```shell
-snakemake --use-conda --conda-not-block-search-path-envvars results/predictions/known_microexons/wt/predictions.MicEvents.hg38.csv.gz
+  $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars predict_saturation_in_silico_mutagenesis
 ```
+
+This will generate a set of variants that mutate every nucleotide 150 nt upstream of a microexon, in a microexon, or 150 nt downstream of a microexon to every possible other nucleotide for all previously known human and mouse microexons.
+
+The results will appear in `results/predictions/{model}/saturation_mutagenesis/predictions.{event}_variants.{species}.csv.gz`, where `{model}` is each of the three models above, `{event}` is all known microexons and `{species}` is `hg38` or `mm10`.
+
+### QKI motif _in silico_ mutagenesis predictions
+You can also run our _in silico_ mutagenesis experiment targeting QKI binding motifs. This script will find all QKI binding motifs of the pattern `ACTAA` or `ACTAAY` and mutate every nucleotide to every possible value. We do this for all known human and mouse microexons and generate predictions using each of our three models.
+
+You can run this task with the command
+```shell
+  $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars qki_predictions
+```
+
+Results will appear in `results/predictions/known_microexons/qki/predictions.qki_split_{split}_{motif}.{genome}.csv.gz` where `{split}` is a subset from 0 to 9.
+
+### Inference for personal genomes
+When we make predictions on microexon splicing for whole personal genomes such as our analysis of ASD-affected cohorts in the MSSNG and SSC datasets, we create a consensus genome file from the individuals VCF file and lift over the microexon coordinates to this new genome.
+
+To run predictions with a personal genome, you need to place a bgzipped VCF file in `resources/personal_genomes/vcf/{dataset}/{sample}.vcf.gz` where you can choose `{dataset}` and `{sample}`. In our case `{dataset}` would be `MSSNG` or `SSC` and `{sample}` would correspond to the individual's sample id.
+
+We supply an example VCF file at [`resources/personal_genomes/vcf/demo/example.vcf.gz`](resources/personal_genomes/vcf/demo/example.vcf.gz).
+
+The quality filter we apply to the VCF file is defined in [`workflow/rules/personal_genome_predictions.smk`](workflow/rules/personal_genome_predictions.smk#1):
+```shell
+FILTER="PASS" & 
+FORMAT/DP>=10 & 
+((GT="het" & (TYPE="snp" | TYPE="mnp") & GQ>=99 & AD[:1]/(FORMAT/DP)>=0.3 & AD[:1]/(FORMAT/DP)<0.8) | 
+ (GT="het" & TYPE="indel" & GQ>=90 & AD[:1]/(FORMAT/DP)>=0.3 & AD[:1]/(FORMAT/DP)<0.8) | 
+ (GT="AA" & GQ>=25 & AD[:1]/(FORMAT/DP)>=0.8))
+```
+Depending on your VCF file and the headers defined therein, you may need to modify this filter.
+
+For personal genomes, we predict a set of previously known human microexons and validated novel ones from our study, defined in [`resources/inputs/personal_genomes/MicEvents_known_novel.hg38.tab.gz`](resources/inputs/personal_genomes/MicEvents_known_novel.hg38.tab.gz).
+
+To run predictions on all VCF files found under `resources/personal_genomes/vcf/{dataset}/{sample}.vcf.gz`, including the supplied demo file, run
+```shell
+  $ snakemake --cores {N} --use-conda --conda-not-block-search-path-envvars personal_genomes
+```
+
+The outputs will appear in ``results/predictions/{model_name}/personal_genomes/predictions.MicEvents_known_novel.[{dataset}--{sample}].csv.gz``.

@@ -55,6 +55,7 @@ rule predictions:
   input:
     expand(
       "results/predictions/{model}/{task}/predictions.{prefix}.{species}.csv.gz",
+      zip,
       model=["known_microexons", "known_microexons_hg38", "novel_microexons"],
       task=TASKS,
       prefix=PREFIX,
@@ -68,6 +69,7 @@ rule personal_genomes:
   input:
     expand(
       "results/predictions/{model}/personal_genomes/predictions.MicEvents_known_novel.[{dataset}--{sample}].csv.gz",
+      zip,
       model=["known_microexons", "known_microexons_hg38", "novel_microexons"],
       dataset=DATASETS,
       sample=SAMPLES
