@@ -6,6 +6,16 @@ VCF_FILTER = (
   "   (GT=\"AA\" & GQ>=25 & AD[:1]/(FORMAT/DP)>=0.8))'"
 )
 
+
+rule tabix:
+  input:
+    vcf="resources/personal_genomes/vcf/{dataset}/{sample}.vcf.gz",
+  output:
+    "resources/personal_genomes/vcf/{dataset}/{sample}.vcf.gz.tbi",
+  conda: "../envs/bcftools.yml"
+  shell:
+    "tabix -p vcf {input.vcf}"
+
 rule consensus:
   input:
     g="resources/genomes/hg38.fa.gz",

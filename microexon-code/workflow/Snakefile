@@ -12,7 +12,7 @@ include: "rules/qki_variants.smk"
 include: "rules/putative_microexons.smk"
 include: "rules/train_model.smk"
 include: "rules/saturation_ism.smk"
-include: "rules/personal_genome_asd_predictions.smk"
+include: "rules/personal_genome_predictions.smk"
 
 rule train_all:
   input:
@@ -49,3 +49,26 @@ rule qki_predictions:
   input:
     expand("results/predictions/known_microexons/qki/predictions.qki_split_{split:02d}_{motif}.{genome}.csv.gz",
       split=range(10), motif=["ACTAA", "ACTAAY"], genome=["hg38", "mm10"])
+
+TASKS, PREFIX, SPECIES = glob_wildcards("resources/inputs/{task}/{prefix}.{species}.tab.gz")
+rule predictions:
+  input:
+    expand(
+      "results/predictions/{model}/{task}/predictions.{prefix}.{species}.csv.gz",
+      model=["known_microexons", "known_microexons_hg38", "novel_microexons"],
+      task=TASKS,
+      prefix=PREFIX,
+      species=SPECIES
+    )
+
+DATASETS, SAMPLES = glob_wildcards(
+  "resources/personal_genomes/vcf/{dataset}/{sample}.vcf.gz"
+)
+rule personal_genomes:
+  input:
+    expand(
+      "results/predictions/{model}/personal_genomes/predictions.MicEvents_known_novel.[{dataset}--{sample}].csv.gz",
+      model=["known_microexons", "known_microexons_hg38", "novel_microexons"],
+      dataset=DATASETS,
+      sample=SAMPLES
+    )
