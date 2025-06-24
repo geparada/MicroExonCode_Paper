@@ -18,11 +18,12 @@ In short:
 ```shell
 $ curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
 $ bash Miniforge3-$(uname)-$(uname -m).sh
+$ bash
 ```
 
 Next, install Snakemake into a fresh environment and activate it:
 ```shell
-$ mamba create -c conda-forge -c bioconda -n snakemake=8.14 snakemake
+$ mamba create -c conda-forge -c bioconda -n snakemake snakemake=8.14 
 $ mamba activate snakemake
 ```
 
