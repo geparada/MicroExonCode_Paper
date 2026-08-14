@@ -22,7 +22,3 @@ The predictions for all variants evaluated by our model as part of the analysis 
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
 
-
-## Contact
-
-For any questions or support, please open an issue in the repository or contact the corresponding authors at their email addresses provided in the paper.
