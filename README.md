@@ -22,10 +22,6 @@ The predictions for all variants evaluated by our model as part of the analysis 
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
 
-## Citation
-
-If you use the scripts or data provided in this repository, please cite our paper:
-Parada, G.E., Bretschneider, H., et al. (2024). An expanded repertoire of brain microexons is directly impacted by autism-associated genetic variation. *Journal Name*, *Volume*(Issue), pages.
 
 ## Contact
 
